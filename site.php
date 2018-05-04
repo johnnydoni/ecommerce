@@ -6,12 +6,14 @@ use \Hcode\Model\Category;
 use \Hcode\Model\Cart;
 
 $app->get('/', function() {
-
+    $cart = new Cart();
+	$cart = Cart::getFromSession();
 	$products = Product::listAll();
 
 	$page = new Page();
 	$page->setTpl("index", [
-		"products"=>Product::checkList($products)
+		"products"=>Product::checkList($products),
+		"cart"=>$cart->getValues()
 	]);	
 });
 
@@ -53,6 +55,7 @@ $app->get("/products/:desurl", function($desurl) {
 $app->get("/cart", function() {
 	$cart = Cart::getFromSession();
 	$page = new Page();
+
 	$page->setTpl("cart", [
 		"cart"=>$cart->getValues(),
 		"products"=>$cart->getProducts(),

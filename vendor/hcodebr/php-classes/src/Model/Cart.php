@@ -65,14 +65,17 @@ class Cart extends Model {
 	}
 
 	public function save() {
+		
+
+
 		$sql = new Sql();
 		$results = $sql->select("CALL sp_carts_save(:idcart, :dessessionid, :iduser, :deszipcode, :vlfreight, :nrdays)", [
-			":idcart"=>$this->getcart(),
+			":idcart"=>$this->getidcart(),
 			":dessessionid"=>$this->getdessessionid(),			
 			":iduser"=>$this->getiduser(),
 			":deszipcode"=>$this->getdeszipcode(),			
 			":vlfreight"=>$this->getvlfreight(),
-			":nrdays"=>$this->getnrdays(),			
+			":nrdays"=>$this->getnrdays()			
 		]);
 
 		$this->setData($results[0]);
@@ -124,7 +127,7 @@ class Cart extends Model {
 			SELECT SUM(vlprice) AS vlprice, SUM(vlwidth) AS vlwidth, SUM(vlheight) AS vlheight, SUM(vllength) AS vllength, SUM(vlweight) AS vlweight, COUNT(*) AS nrqtd
 			FROM tb_products a 
 			INNER JOIN tb_cartsproducts b ON a.idproduct = b.idproduct 
-			WHERE b.idcart = :idcart AND dtremoved IS NULL", [
+			WHERE b.idcart = :idcart AND dtremoved IS NULL;", [
 				":idcart"=>$this->getidcart()
 			]);
 
@@ -136,9 +139,8 @@ class Cart extends Model {
 	}
 
 	public function setFreight($nrzipcode) {
-		$zipcode = str_replace("-", "", $nrzipcode);
+		$nrzipcode = str_replace("-", "", $nrzipcode);
 		$totals = $this->getProductsTotals();
-
 
 		if ($totals["nrqtd"] > 0) {
 
@@ -175,9 +177,7 @@ class Cart extends Model {
 
 			$this->setnrdays($result->PrazoEntrega);
 			$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
-			$this->setdeszipcode($nrzipcode);
-		
-
+  		    $this->setdeszipcode($nrzipcode);	
 			$this->save();
 
 			return $result;
@@ -192,7 +192,7 @@ class Cart extends Model {
 		return str_replace(",", ".", $value);
 	}
 
-	public static function setMsgError() {
+	public static function setMsgError($msg) {
 		$_SESSION[Cart::SESSION_ERROR] = $msg;
 	}
 
