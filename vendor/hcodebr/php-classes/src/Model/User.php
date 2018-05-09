@@ -10,7 +10,8 @@ class User extends Model {
 
 	const SESSION = "User";
 	const SECRET = "HcodePhp7_Secret";
-    const SESSION_ERROR = "UserError";
+    const ERROR_SESSION = "UserError";
+    const ERROR_REGISTER = "UserErrorRegister";
 
 	public static function getFromSession() {
 		$user = new User();
@@ -208,25 +209,47 @@ class User extends Model {
  	}
 
 	public static function setMsgError($msg) {
-		$_SESSION[User::SESSION_ERROR] = $msg;
+		$_SESSION[User::ERROR_SESSION] = $msg;
 	}
 
 	public static function getMsgError() {
-		$msg = (isset($_SESSION[User::SESSION_ERROR]) && $_SESSION[User::SESSION_ERROR]) ? $_SESSION[User::SESSION_ERROR]  : "";
+		$msg = (isset($_SESSION[User::ERROR_SESSION]) && $_SESSION[User::ERROR_SESSION]) ? $_SESSION[User::ERROR_SESSION]  : "";
 		User::clearMsgError();
 		return $msg;
 	}
 
 	public static function clearMsgError() {
-		$_SESSION[User::SESSION_ERROR] = NULL;
+		$_SESSION[User::ERROR_SESSION] = NULL;
 	}
+
+	public static function setErrorRegister($msg) {
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+	}
+
+	public static function getErrorRegister() {
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : "";
+		User::clearErrorRegister();
+		return $msg;
+	}
+
+	public static function clearErrorRegister() {
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+	}
+
+	public static function checkLoginExist($login) {
+		$sql = new Sql();
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
+			":deslogin"=>$login
+		]);
+		return (count($results) > 0);
+	}
+
 
 	public static function getPasswordHash($password) {
 		return password_hash($password, PASSWORD_DEFAULT, [
 			"cost"=>12
 		]);
 	}
-
 
 }
 
