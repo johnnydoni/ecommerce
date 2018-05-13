@@ -19,7 +19,7 @@ $app->get("/admin/products", function() {
     $pages = [];
     for ($x=0; $x < $pagination["pages"]; $x++) { 
         array_push($pages, [
-            "href"=>"/admin/users?" . http_build_query([
+            "href"=>"/admin/products?" . http_build_query([
                 "page"=>$x+1,
                 "search"=>$search
             ]),
