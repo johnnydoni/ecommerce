@@ -41,16 +41,17 @@ class Address extends Model {
 
     public function save() {
     	$sql = new Sql();
-    	$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplemen, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
-    		"idaddress"=>$this->getidaddress(),
-    		"idperson"=>$this->getidperson(),
-    		"desaddress"=>utf8_decode($this->getdesaddress()),
-    		"descomplemen"=>utf8_decode($this->getdescomplement()),
-    		"descity"=>utf8_decode($this->getdescity()),
-    		"desstate"=>utf8_decode($this->getdesstate()),
-    		"descountry"=>utf8_decode($this->getdescountry()),
-    		"deszipcode"=>$this->getdeszipcode(),
-    		"desdistrict"=>$this->getdesdistrict()
+    	$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplemen, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
+    		":idaddress"=>$this->getidaddress(),
+    		":idperson"=>$this->getidperson(),
+    		":desaddress"=>utf8_decode($this->getdesaddress()),
+            ":desnumber"=>$this->getdesnumber(),
+    		":descomplemen"=>utf8_decode($this->getdescomplement()),
+    		":descity"=>utf8_decode($this->getdescity()),
+    		":desstate"=>utf8_decode($this->getdesstate()),
+    		":descountry"=>utf8_decode($this->getdescountry()),
+    		":deszipcode"=>$this->getdeszipcode(),
+    		":desdistrict"=>$this->getdesdistrict()
     	]);
 
     	if (count($results) > 0) {
