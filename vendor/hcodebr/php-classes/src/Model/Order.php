@@ -67,7 +67,7 @@ class Order extends Model {
 		]);
 	}
 
-	public function getCard():Cart {
+	public function getCart():Cart {
 		$cart = new Cart();
 		$cart->get((int)$this->getidcart());
 		return $cart;
@@ -146,6 +146,8 @@ class Order extends Model {
 
 		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
 
+var_dump($results);
+exit;
 		return [
 			"data"=>$results,
 			"total"=>(int)$resultTotal[0]["nrtotal"],
